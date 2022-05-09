@@ -25,6 +25,17 @@ export function getDayString(shiftDayCount?: number) {
     .toFormat("yyyy-MM-dd");
 }
 
+export function randomDate(start: Date, end: Date) {
+  const date = new Date(
+    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+  );
+
+  return DateTime.fromJSDate(date).plus({ days: 0 }).toFormat("yyyy-MM-dd");
+}
+
+const d = randomDate(new Date(2012, 0, 1), new Date());
+console.log(d);
+
 export function useTodays(dayString: string): [
   {
     country?: Country;
