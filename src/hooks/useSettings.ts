@@ -1,15 +1,18 @@
 import { useCallback, useState } from "react";
 
 export interface SettingsData {
+  showScale: boolean;
   noImageMode: boolean;
   rotationMode: boolean;
   distanceUnit: "km" | "miles";
   theme: "light" | "dark";
   shiftDayCount: number;
   allowShiftingDay: boolean;
+  updateNotificationDisabled: boolean;
 }
 
 const defaultSettingsData: SettingsData = {
+  showScale: false,
   noImageMode: false,
   rotationMode: false,
   distanceUnit: "km",
@@ -18,6 +21,7 @@ const defaultSettingsData: SettingsData = {
     : "light",
   shiftDayCount: 0,
   allowShiftingDay: false,
+  updateNotificationDisabled: false,
 };
 
 function loadSettings(): SettingsData {

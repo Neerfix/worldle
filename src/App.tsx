@@ -5,12 +5,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Infos } from "./components/panels/Infos";
 import { useTranslation } from "react-i18next";
 import { InfosFr } from "./components/panels/InfosFr";
+import { InfosHu } from "./components/panels/InfosHu";
+import { InfosNl } from "./components/panels/InfosNl";
+import { InfosPl } from "./components/panels/InfosPl";
 import { Settings } from "./components/panels/Settings";
 import { useSettings } from "./hooks/useSettings";
 import { Worldle } from "./components/Worldle";
 import { Stats } from "./components/panels/Stats";
-import { useReactPWAInstall } from "@teuteuf/react-pwa-install";
-import { InstallButton } from "./components/InstallButton";
 import { Twemoji } from "@teuteuf/react-emoji-render";
 import { getDayString, useTodays } from "./hooks/useTodays";
 
@@ -18,13 +19,11 @@ const supportLink: Record<string, string> = {
   UA: "https://donate.redcrossredcrescent.org/ua/donate/~my-donation?_cv=1",
 };
 
-function App() {
+export default function App() {
   const { t, i18n } = useTranslation();
 
   const dayString = useMemo(getDayString, []);
   const [{ country }] = useTodays(dayString);
-
-  const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
 
   const [infoOpen, setInfoOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -40,6 +39,24 @@ function App() {
     }
   }, [settingsData.theme]);
 
+  let InfosComponent;
+  switch (i18n.resolvedLanguage) {
+    case "fr":
+      InfosComponent = InfosFr;
+      break;
+    case "hu":
+      InfosComponent = InfosHu;
+      break;
+    case "nl":
+      InfosComponent = InfosNl;
+      break;
+    case "pl":
+      InfosComponent = InfosPl;
+      break;
+    default:
+      InfosComponent = Infos;
+  }
+
   return (
     <>
       <ToastContainer
@@ -49,20 +66,14 @@ function App() {
         theme={settingsData.theme}
         autoClose={2000}
         bodyClassName="font-bold text-center"
+        toastClassName="flex justify-center m-2 max-w-full"
+        style={{ width: 500, maxWidth: "100%" }}
       />
-      {i18n.resolvedLanguage === "fr" ? (
-        <InfosFr
-          isOpen={infoOpen}
-          close={() => setInfoOpen(false)}
-          settingsData={settingsData}
-        />
-      ) : (
-        <Infos
-          isOpen={infoOpen}
-          close={() => setInfoOpen(false)}
-          settingsData={settingsData}
-        />
-      )}
+      <InfosComponent
+        isOpen={infoOpen}
+        close={() => setInfoOpen(false)}
+        settingsData={settingsData}
+      />
       <Settings
         isOpen={settingsOpen}
         close={() => setSettingsOpen(false)}
@@ -84,9 +95,6 @@ function App() {
             >
               <Twemoji text="❓" />
             </button>
-            {supported() && !isInstalled() && (
-              <InstallButton pwaInstall={pwaInstall} />
-            )}
             <h1 className="text-4xl font-bold uppercase tracking-wide text-center my-1 flex-auto">
               Wor<span className="text-green-600">l</span>dle
             </h1>
@@ -106,7 +114,7 @@ function App() {
             </button>
           </header>
           <Game settingsData={settingsData} updateSettings={updateSettings} />
-          <footer className="flex justify-center items-center text-sm mt-8 mb-1">
+          <footer className="flex justify-center items-center mt-8 mb-4">
             <Twemoji
               text="❤️"
               className="flex items-center justify-center mr-1"
@@ -142,5 +150,3 @@ function App() {
     </>
   );
 }
-
-export default App;

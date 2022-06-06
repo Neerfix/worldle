@@ -12,21 +12,25 @@ interface InfosProps {
   settingsData: SettingsData;
 }
 
-export function Infos({ isOpen, close, settingsData }: InfosProps) {
+export function InfosHu({ isOpen, close, settingsData }: InfosProps) {
   return (
-    <Panel title="How to play" isOpen={isOpen} close={close}>
+    <Panel title="Hogyan játssz?" isOpen={isOpen} close={close}>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
         <div>
-          Guess the <Worldle /> in 6 guesses.
+          {" "}
+          Találd ki a napi <Worldle />
+          -t 6 próbálkozásból.
         </div>
-        <div>Each guess must be a valid country, territory, ...</div>
         <div>
-          After each guess, you will have the distance, the direction and the
-          proximity from your guess to the target country.
+          Minden próbálkozásodnak egy valódi országnak, térségnek kell lennie.
+        </div>
+        <div>
+          Minden tipp után megkapod a távolságot, az ország irányát, és a tipp
+          közelségét jelző százalékot.
         </div>
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
-        <div className="font-bold">Examples</div>
+        <div className="font-bold">Példák</div>
         <div>
           <Guesses
             rowCount={1}
@@ -40,11 +44,10 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             settingsData={settingsData}
           />
           <div className="my-2">
-            Your guess <span className="uppercase font-bold">Chile</span> is{" "}
-            {formatDistance(13557000, settingsData.distanceUnit)} away from the
-            target country, the target country is in the North-East direction
-            and you have a only 32% of proximity because it&apos;s quite far
-            away!
+            A tipped, <span className="uppercase font-bold">Chile</span>{" "}
+            {formatDistance(13_557_000, settingsData.distanceUnit)}-re van a
+            céltól, mely a tippedtől Észak-Keletre-fekszik, de csak 32%-os a
+            tipp, mivel elég messzire tippeltél.
           </div>
         </div>
         <div>
@@ -52,7 +55,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             rowCount={1}
             guesses={[
               {
-                name: "Finland",
+                name: "Finnország",
                 direction: "SE",
                 distance: 3_206_000,
               },
@@ -60,10 +63,11 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             settingsData={settingsData}
           />
           <div className="my-2">
-            Your second guess{" "}
-            <span className="uppercase font-bold">Finland</span> is getting
-            closer! {formatDistance(3206000, settingsData.distanceUnit)} away,
-            South-East direction and 84%!
+            Második tipped{" "}
+            <span className="uppercase font-bold">Finnország</span> már közelebb
+            van! A megoldás{" "}
+            {formatDistance(3_206_000, settingsData.distanceUnit)}-re,
+            Dél-Keletre van, ez egy 83%-os megoldás.
           </div>
         </div>
         <div>
@@ -71,7 +75,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             rowCount={1}
             guesses={[
               {
-                name: "Lebanon",
+                name: "Libanon",
                 direction: "N",
                 distance: 0,
               },
@@ -79,33 +83,41 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             settingsData={settingsData}
           />
           <div className="my-2">
-            Next guess, <span className="uppercase font-bold">Lebanon</span>,
-            it&apos;s the country to guess! Congrats!{" "}
+            Következő próbálkozás{" "}
+            <span className="uppercase font-bold">Libanon</span>, a kitalálandó
+            ország! Szép munka!{" "}
             <Twemoji text="🎉" options={{ className: "inline-block" }} />
           </div>
         </div>
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3 font-bold">
-        A new <Worldle /> will be available every day!
+        Minden nap új <Worldle /> érhető el!
       </div>
       <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
-        <div className="font-bold">Any question or suggestion?</div>
+        <div className="font-bold">Kérdésed, vagy javaslatod van?</div>
         <div>
-          Check the{" "}
           <a
             className="underline"
-            href="https://worldle.notion.site/Worldle-b84ab0f002e34866980a4d47cf9291b7"
+            href="https://worldle.notion.site/Worldle-4005ca16fc9341e7be8adcfd30628146"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Worldle FAQ
+            FAQ Worldle
           </a>
-          !
         </div>
       </div>
-      <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
-        <Worldle /> has been <span className="font-bold">heavily</span> inspired
-        by{" "}
+      <div className="space-y-3 border-b-2 border-gray-200 pb-3 mb-3">
+        <Worldle />
+        -höz <span className="font-bold">jelentős</span> inspirációt adott a{" "}
+        <a
+          className="underline"
+          href="https://twitter.com/powerlanguish"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Josh Wardle (@powerlanguish)
+        </a>{" "}
+        által készített{" "}
         <a
           className="underline"
           href="https://www.powerlanguage.co.uk/wordle/"
@@ -114,20 +126,11 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
         >
           Wordle
         </a>{" "}
-        created by{" "}
-        <a
-          className="underline"
-          href="https://twitter.com/powerlanguish"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Josh Wardle (@powerlanguish)
-        </a>
         .
       </div>
       <div className="space-y-3 text-justify pb-3">
         <div>
-          Made by{" "}
+          Készítette{" "}
           <a
             className="underline"
             href="https://twitter.com/teuteuf"
@@ -143,12 +146,12 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            source code
+            code source
           </a>
           )
         </div>
         <div>
-          Want to support?{" "}
+          Támogatnál?{" "}
           <a
             className="underline"
             href="https://www.ko-fi.com/teuteuf"
@@ -156,7 +159,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             rel="noopener noreferrer"
           >
             <Twemoji
-              text="Buy me a coffee! ☕"
+              text="Dobj meg egy kávéval! ☕"
               options={{ className: "inline-block" }}
             />
           </a>

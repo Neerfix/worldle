@@ -8,7 +8,6 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@teuteuf/react-emoji-render": "^1.2.6",
-    "@teuteuf/react-pwa-install": "^1.1.2",
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.19",
     "@types/react": "^17.0.38",

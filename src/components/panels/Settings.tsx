@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SettingsData } from "../../hooks/useSettings";
+import { translations } from "../../i18n";
 import { Panel } from "./Panel";
 
 interface SettingsProps {
@@ -16,7 +17,7 @@ export function Settings({
   settingsData,
   updateSettings,
 }: SettingsProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [debugEnabled, setDebugEnabled] = useState(false);
 
   return (
@@ -26,11 +27,11 @@ export function Settings({
       close={close}
       debugAction={() => setDebugEnabled(true)}
     >
-      <div className="my-4">
+      <div className="my-4 flex flex-col gap-2">
         <div className="flex p-1">
           <select
             id="setting-distanceUnit"
-            className="h-8 dark:bg-slate-800"
+            className="h-8 dark:bg-slate-800 w-16 p-1"
             value={settingsData.distanceUnit}
             onChange={(e) =>
               updateSettings({ distanceUnit: e.target.value as "km" | "miles" })
@@ -49,7 +50,7 @@ export function Settings({
         <div className="flex p-1">
           <select
             id="setting-theme"
-            className="h-8 dark:bg-slate-800"
+            className="h-8 dark:bg-slate-800 w-16 p-1"
             value={settingsData.theme}
             onChange={(e) =>
               updateSettings({ theme: e.target.value as "light" | "dark" })
@@ -65,8 +66,28 @@ export function Settings({
             {t("settings.theme")}
           </label>
         </div>
+        <div className="flex p-1">
+          <select
+            id="setting-language"
+            className="h-8 dark:bg-slate-800 w-16 p-1"
+            value={i18n.language}
+            onChange={(e) => i18n.changeLanguage(e.target.value)}
+          >
+            {Object.keys(translations).map((language) => (
+              <option key={language} value={language}>
+                {language.toUpperCase()}
+              </option>
+            ))}
+          </select>
+          <label
+            className="flex-1 ml-2 flex items-center"
+            htmlFor="setting-language"
+          >
+            {t("settings.language")}
+          </label>
+        </div>
       </div>
-      <div className="my-4">
+      <div className="my-4 flex flex-col gap-2">
         <header className="my-2">
           <h3 className="text-lg font-bold">
             {t("settings.difficultyModifiers")}
@@ -75,6 +96,17 @@ export function Settings({
             {t("settings.startingNextDay")}
           </div>
         </header>
+        <div className="flex p-1">
+          <input
+            type="checkbox"
+            id="setting-showScale"
+            checked={settingsData.showScale}
+            onChange={(e) => updateSettings({ showScale: e.target.checked })}
+          />
+          <label className="flex-1 ml-2" htmlFor="setting-showScale">
+            {t("settings.showScale")}
+          </label>
+        </div>
         <div className="flex p-1">
           <input
             type="checkbox"

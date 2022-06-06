@@ -7,11 +7,7 @@ import React, {
   useState,
 } from "react";
 import { toast } from "react-toastify";
-import {
-  countries,
-  getCountryName,
-  sanitizeCountryName,
-} from "../domain/countries";
+import { getCountryName, sanitizeCountryName } from "../domain/countries";
 import { CountryInput } from "./CountryInput";
 import * as geolib from "geolib";
 import { Share } from "./Share";
@@ -21,7 +17,10 @@ import { SettingsData } from "../hooks/useSettings";
 import { useMode } from "../hooks/useMode";
 import { getDayString, randomDate, useTodays } from "../hooks/useTodays";
 import { Twemoji } from "@teuteuf/react-emoji-render";
+import { countries } from "../domain/countries.position";
+import { useNewsNotifications } from "../hooks/useNewsNotifications";
 
+const ENABLE_TWITCH_LINK = false;
 const MAX_TRY_COUNT = 6;
 const randomDay = randomDate(new Date(2012, 0, 1), new Date());
 
@@ -37,10 +36,16 @@ export function Game({ settingsData, updateSettings }: GameProps) {
     [settingsData.shiftDayCount]
   );
 
+  useNewsNotifications(dayString);
+
   const countryInputRef = useRef<HTMLInputElement>(null);
 
   const [todays, addGuess, randomAngle, imageScale] = useTodays(randomDay);
   const { country, guesses } = todays;
+  const countryName = useMemo(
+    () => (country ? getCountryName(i18n.resolvedLanguage, country) : ""),
+    [country, i18n.resolvedLanguage]
+  );
 
   const [currentGuess, setCurrentGuess] = useState("");
   const [hideImageMode, setHideImageMode] = useMode(
@@ -125,7 +130,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
     <div className="flex-grow flex flex-col mx-2">
       {hideImageMode && !gameEnded && (
         <button
-          className="border-2 uppercase my-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
+          className="font-bold border-2 p-1 rounded uppercase my-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
           type="button"
           onClick={() => setHideImageMode(false)}
         >
@@ -177,7 +182,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       </div>
       {rotationMode && !hideImageMode && !gameEnded && (
         <button
-          className="border-2 uppercase mb-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
+          className="font-bold rounded p-1 border-2 uppercase mb-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
           type="button"
           onClick={() => setRotationMode(false)}
         >
@@ -188,6 +193,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         </button>
       )}
       <Guesses
+        targetCountry={country}
         rowCount={MAX_TRY_COUNT}
         guesses={guesses}
         settingsData={settingsData}
@@ -203,20 +209,47 @@ export function Game({ settingsData, updateSettings }: GameProps) {
               hideImageMode={hideImageMode}
               rotationMode={rotationMode}
             />
-            <a
-              className="underline w-full text-center block mt-4"
-              href={`https://www.google.com/maps?q=${getCountryName(
-                i18n.resolvedLanguage,
-                country
-              )}+${country.code.toUpperCase()}&hl=${i18n.resolvedLanguage}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Twemoji
-                text={t("showOnGoogleMaps")}
-                options={{ className: "inline-block" }}
-              />
-            </a>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <a
+                className="underline text-center block mt-4 whitespace-nowrap"
+                href={`https://www.google.com/maps?q=${countryName}+${country.code.toUpperCase()}&hl=${
+                  i18n.resolvedLanguage
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Twemoji
+                  text={t("showOnGoogleMaps")}
+                  options={{ className: "inline-block" }}
+                />
+              </a>
+              <a
+                className="underline text-center block mt-4 whitespace-nowrap"
+                href={`https://${i18n.resolvedLanguage}.wikipedia.org/wiki/${countryName}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Twemoji
+                  text={t("showOnWikipedia")}
+                  options={{ className: "inline-block" }}
+                />
+              </a>
+            </div>
+            {ENABLE_TWITCH_LINK && (
+              <div className="flex flex-wrap gap-4 justify-center">
+                <a
+                  className="underline text-center block mt-4 whitespace-nowrap"
+                  href="https://www.twitch.tv/t3uteuf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Twemoji
+                    text="More? Play on Twitch! 👾"
+                    options={{ className: "inline-block" }}
+                  />
+                </a>
+              </div>
+            )}
           </>
         ) : (
           <form onSubmit={handleSubmit}>
